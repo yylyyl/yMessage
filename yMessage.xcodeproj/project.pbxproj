@@ -46,7 +46,7 @@
 		85727BA71A47365800FA42B4 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BA61A47365800FA42B4 /* TabBarViewController.m */; };
 		85727BAC1A4814F700FA42B4 /* ConversationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAB1A4814F700FA42B4 /* ConversationTableViewCell.m */; };
 		85727BB01A4854C900FA42B4 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */; };
-		85D111071A2CB74500C434A9 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D111061A2CB74500C434A9 /* AddFriendViewController.m */; };
+		858D055B1A4896640050A6F7 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 858D055A1A4896640050A6F7 /* AddFriendViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,8 +124,8 @@
 		85727BAB1A4814F700FA42B4 /* ConversationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationTableViewCell.m; sourceTree = "<group>"; };
 		85727BAE1A4854C900FA42B4 /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
-		85D111051A2CB74500C434A9 /* AddFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddFriendViewController.h; sourceTree = "<group>"; };
-		85D111061A2CB74500C434A9 /* AddFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddFriendViewController.m; sourceTree = "<group>"; };
+		858D05591A4896640050A6F7 /* AddFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendViewController.h; path = yMessage/AddFriendViewController.h; sourceTree = "<group>"; };
+		858D055A1A4896640050A6F7 /* AddFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendViewController.m; path = yMessage/AddFriendViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,8 +310,8 @@
 			children = (
 				85424A4D1A11095800419FF2 /* FriendsListTableViewController.h */,
 				85424A4E1A11095800419FF2 /* FriendsListTableViewController.m */,
-				85D111051A2CB74500C434A9 /* AddFriendViewController.h */,
-				85D111061A2CB74500C434A9 /* AddFriendViewController.m */,
+				858D05591A4896640050A6F7 /* AddFriendViewController.h */,
+				858D055A1A4896640050A6F7 /* AddFriendViewController.m */,
 			);
 			name = Friends;
 			path = ..;
@@ -400,6 +400,7 @@
 				85727B9E1A47302300FA42B4 /* LoginTableViewController.m in Sources */,
 				85424A491A11080B00419FF2 /* ConversationListTableViewController.m in Sources */,
 				85727BA41A47344200FA42B4 /* CocoaSecurity.m in Sources */,
+				858D055B1A4896640050A6F7 /* AddFriendViewController.m in Sources */,
 				85424A4C1A1108B100419FF2 /* YMessageManager.m in Sources */,
 				85727B921A46E13B00FA42B4 /* FMDatabase.m in Sources */,
 				85727BAC1A4814F700FA42B4 /* ConversationTableViewCell.m in Sources */,
@@ -423,7 +424,6 @@
 				85424A6D1A110D5700419FF2 /* AFSecurityPolicy.m in Sources */,
 				85424A701A110D5700419FF2 /* AFURLResponseSerialization.m in Sources */,
 				85424A741A11112000419FF2 /* YConversation.m in Sources */,
-				85D111071A2CB74500C434A9 /* AddFriendViewController.m in Sources */,
 				85727B991A46E16100FA42B4 /* DBQ.m in Sources */,
 				85424A691A110D5700419FF2 /* AFHTTPRequestOperation.m in Sources */,
 			);
