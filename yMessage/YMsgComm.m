@@ -11,7 +11,7 @@
 
 @implementation YMsgComm
 
-- (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock {
+- (id)initWithMyId:(NSString *)nmyid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock {
     self = [super init];
     if (self) {
         msgQueue = [NSMutableArray array];
@@ -22,11 +22,15 @@
         successBlock = nsuccessBlock;
         errorBlock = nerrorBlock;
         loadingBlock = nloadingBlock;
+        myid = nmyid;
         
-        [mySession openWithPeerId:myid];
     }
     
     return self;
+}
+
+- (void)open {
+    [mySession openWithPeerId:myid];
 }
 
 - (void)sessionOpened:(AVSession *)session {
@@ -104,7 +108,7 @@
     
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"http://yyl.im/ym/sign.php"];
     NSString *peerIdsString = [watchedPeerIds componentsJoinedByString:@":"];
-    r.GETDictionary = @{ @"peer_id":peerId, @"watch_peer_ids":peerIdsString };
+    r.GETDictionary = @{ @"peer_id":peerId, @"watch_peer_ids":peerIdsString, @"username": self.username, @"hpassword": self.hpassword };
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         NSLog(@"%@", body);
     };
@@ -123,7 +127,7 @@
                  error:&error];
     
     if (error) {
-        NSLog(@"%@", [error localizedDescription]);
+        NSLog(@"Get signature error: %@ %@", [error localizedDescription], r.responseString);
         return nil;
     }
     NSInteger timestamp;

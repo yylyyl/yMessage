@@ -32,5 +32,7 @@
 - (void)openConnectSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock loading:(void (^)(void))loadingBlock;
 
 - (void)checkFriendWithNumberString:(NSString *)numStr success:(void (^)(NSString *))successBlock error:(void (^)(NSString *))errorBlock;
+- (void)acceptFriendSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
+- (void)checkAcceptSuccess:(void (^)(BOOL))successBlock error:(void (^)(NSString *))errorBlock;
 
 @end

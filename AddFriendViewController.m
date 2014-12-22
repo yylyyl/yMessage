@@ -43,6 +43,8 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     [[AFHTTPRequestOperationManager manager].operationQueue cancelAllOperations];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addFriend:) object:toCancel];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 - (IBAction)editingChanged:(id)sender {
@@ -92,8 +94,9 @@
     // loop wait...
     [manager checkFriendWithNumberString:numberString success:^(NSString *screenName) {
         if ([screenName isKindOfClass:[NSNull class]]) {
-            [self performSelector:@selector(addFriend:) withObject:numberString afterDelay:1];
-            NSLog(@"Wait...");
+            [self performSelector:@selector(addFriend:) withObject:numberString afterDelay:2];
+            toCancel = numberString;
+            //NSLog(@"Wait...");
             return;
         }
         
@@ -115,16 +118,33 @@
     }];
 }
 
-- (void)checkFriendSuccessCheck:(NSString *)screenName {
-    
-};
-
 - (void)acceptFriend {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self.navigationItem.rightBarButtonItem setEnabled:NO];
     [self.view setUserInteractionEnabled:NO];
     
-    
+    [manager acceptFriendSuccess:^(void) {
+        [self checkAccept];
+    } error:^(NSString *errorString) {
+        [self showError:errorString];
+    }];
+}
+
+- (void)checkAccept {
+    [manager checkAcceptSuccess:^(BOOL accept) {
+        if (!accept) {
+            [self performSelector:@selector(checkAccept) withObject:nil afterDelay:2];
+            toCancel = nil;
+            return;
+        }
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
+        [self.view setUserInteractionEnabled:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
+    } error:^(NSString *errorString) {
+        [self showError:errorString];
+    }];
 }
 
 - (void)showError:(NSString *)errorString {

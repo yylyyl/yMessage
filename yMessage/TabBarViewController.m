@@ -31,7 +31,7 @@
     YMessageManager *manager = [YMessageManager sharedInstance];
     if (![manager logined]) {
         [self performSegueWithIdentifier:@"login" sender:self];
-    } else {
+    } else if (!sessionStarted) {
         [self startSession];
     }
 }
@@ -59,6 +59,8 @@
     [manager openConnectSuccess:^(void) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self.view setUserInteractionEnabled:YES];
+        sessionStarted = YES;
+        
     } error:^(NSString *errorString) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self.view setUserInteractionEnabled:YES];
@@ -73,9 +75,12 @@
         [alert addAction:retryAction];
         [alert addAction:loginAction];
         [self presentViewController:alert animated:YES completion:nil];
+        sessionStarted = NO;
+        
     } loading:^(void) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [self.view setUserInteractionEnabled:NO];
+        sessionStarted = NO;
     } ];
 }
 

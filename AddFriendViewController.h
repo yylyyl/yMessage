@@ -11,6 +11,8 @@
 
 @interface AddFriendViewController : UIViewController <UITextFieldDelegate> {
     YMessageManager *manager;
+    
+    id toCancel;
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *textField1;

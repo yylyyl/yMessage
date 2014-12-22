@@ -55,6 +55,9 @@
     NSArray *friendsIdsArray = [friendsDict allKeys];
     NSString *myIdString = [[self getUID] stringValue];
     comm = [[YMsgComm alloc] initWithMyId:myIdString myFriendsIds:friendsIdsArray success:successBlock error:errorBlock loading:loadingBlock];
+    comm.username = [self getUsername];
+    comm.hpassword = [self getHashedPassword];
+    [comm open];
 }
 
 - (NSMutableDictionary *)getFriendsDict {
@@ -181,7 +184,7 @@
     
 }
 
-- (void)checkAcceptSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock {
+- (void)checkAcceptSuccess:(void (^)(BOOL))successBlock error:(void (^)(NSString *))errorBlock {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSDictionary *args = @{@"username": [self getUsername], @"hpassword": [self getHashedPassword], @"matchid": matchid};
     [manager GET:@"http://yyl.im/ym/accept_check.php" parameters:args success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -201,8 +204,10 @@
             return;
         }
         
+        BOOL accept = [[d objectForKey:@"accept"] boolValue];
+        
         if (successBlock) {
-            successBlock();
+            successBlock(accept);
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

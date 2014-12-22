@@ -18,6 +18,7 @@
 
 @interface YMsgComm : NSObject <AVSessionDelegate, AVSignatureDelegate> {
     NSMutableArray *msgQueue;
+    NSString *myid;
     AVSession *mySession;
     
     void (^successBlock)(void);
@@ -26,6 +27,10 @@
     
 }
 
+@property (strong, nonatomic) NSString *username;
+@property (strong, nonatomic) NSString *hpassword;
+
 - (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock;
+- (void)open;
 
 @end
