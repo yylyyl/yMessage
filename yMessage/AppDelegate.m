@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <AVOSCloud/AVOSCloud.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [AVOSCloud setApplicationId:@"chli5qcatwixgl9iire960jvw8na1kgyii4q3a3pailoqh35"
+                      clientKey:@"tz5tsuwryej674wkgdbuajdjounoalub4yrgoek1rpojgy9f"];
     return YES;
 }
 
