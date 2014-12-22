@@ -29,5 +29,8 @@
 - (void)loginUsername:(NSString *)loginusername password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
 - (BOOL)logined;
 
-- (void)openConnectSuccess:(void (^)(void))successBlock  error:(void (^)(NSString *))errorBlock;
+- (void)openConnectSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock loading:(void (^)(void))loadingBlock;
+
+- (void)checkFriendWithNumberString:(NSString *)numStr success:(void (^)(NSString *))successBlock error:(void (^)(NSString *))errorBlock;
+
 @end

@@ -51,10 +51,10 @@
     return self;
 }
 
-- (void)openConnectSuccess:(void (^)(void))successBlock  error:(void (^)(NSString *))errorBlock {
+- (void)openConnectSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock loading:(void (^)(void))loadingBlock {
     NSArray *friendsIdsArray = [friendsDict allKeys];
     NSString *myIdString = [[self getUID] stringValue];
-    comm = [[YMsgComm alloc] initWithMyId:myIdString myFriendsIds:friendsIdsArray success:successBlock error:errorBlock];
+    comm = [[YMsgComm alloc] initWithMyId:myIdString myFriendsIds:friendsIdsArray success:successBlock error:errorBlock loading:loadingBlock];
 }
 
 - (NSMutableDictionary *)getFriendsDict {
@@ -110,9 +110,11 @@
     }];
 }
 
-- (void)checkFriendWithNumber:(NSNumber *)num success:(void (^)(NSString *))successBlock error:(void (^)(NSString *))errorBlock {
+#pragma mark - adding friends
+
+- (void)checkFriendWithNumberString:(NSString *)numStr success:(void (^)(NSString *))successBlock error:(void (^)(NSString *))errorBlock {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *args = @{@"username": [self getUsername], @"hpassword": [self getHashedPassword], @"num": num};
+    NSDictionary *args = @{@"username": [self getUsername], @"hpassword": [self getHashedPassword], @"num": numStr};
     [manager GET:@"http://yyl.im/ym/check_friend.php" parameters:args success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject == nil || ![responseObject isKindOfClass: [NSDictionary class]]) {
             if (errorBlock) {
@@ -211,6 +213,8 @@
     }];
     
 }
+
+#pragma mark - other things
 
 
 - (NSString *)getHashedPassword {

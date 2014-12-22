@@ -45,6 +45,7 @@
 		85727BA41A47344200FA42B4 /* CocoaSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BA31A47344200FA42B4 /* CocoaSecurity.m */; };
 		85727BA71A47365800FA42B4 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BA61A47365800FA42B4 /* TabBarViewController.m */; };
 		85727BAC1A4814F700FA42B4 /* ConversationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAB1A4814F700FA42B4 /* ConversationTableViewCell.m */; };
+		85727BB01A4854C900FA42B4 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */; };
 		85D111071A2CB74500C434A9 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D111061A2CB74500C434A9 /* AddFriendViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -121,6 +122,8 @@
 		85727BA81A47F38C00FA42B4 /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
 		85727BAA1A4814F700FA42B4 /* ConversationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationTableViewCell.h; sourceTree = "<group>"; };
 		85727BAB1A4814F700FA42B4 /* ConversationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationTableViewCell.m; sourceTree = "<group>"; };
+		85727BAE1A4854C900FA42B4 /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
+		85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		85D111051A2CB74500C434A9 /* AddFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddFriendViewController.h; sourceTree = "<group>"; };
 		85D111061A2CB74500C434A9 /* AddFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddFriendViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -227,6 +230,8 @@
 		85424A541A110D3B00419FF2 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				85727BAE1A4854C900FA42B4 /* STHTTPRequest.h */,
+				85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */,
 				85727BA21A47344200FA42B4 /* CocoaSecurity.h */,
 				85727BA31A47344200FA42B4 /* CocoaSecurity.m */,
 				85727B9F1A47311800FA42B4 /* MBProgressHUD.h */,
@@ -409,6 +414,7 @@
 				85727BA11A47311800FA42B4 /* MBProgressHUD.m in Sources */,
 				85424A6F1A110D5700419FF2 /* AFURLRequestSerialization.m in Sources */,
 				85727BA71A47365800FA42B4 /* TabBarViewController.m in Sources */,
+				85727BB01A4854C900FA42B4 /* STHTTPRequest.m in Sources */,
 				85727B951A46E13B00FA42B4 /* FMDatabaseQueue.m in Sources */,
 				85424A241A11063200419FF2 /* AppDelegate.m in Sources */,
 				85424A211A11063200419FF2 /* main.m in Sources */,

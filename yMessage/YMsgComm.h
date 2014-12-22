@@ -18,12 +18,14 @@
 
 @interface YMsgComm : NSObject <AVSessionDelegate, AVSignatureDelegate> {
     NSMutableArray *msgQueue;
-    AVSession *session;
+    AVSession *mySession;
     
     void (^successBlock)(void);
     void (^errorBlock)(NSString *);
+    void (^loadingBlock)(void);
+    
 }
 
-- (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock;
+- (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock;
 
 @end

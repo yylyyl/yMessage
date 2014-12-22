@@ -57,7 +57,7 @@
     [self.view setUserInteractionEnabled:NO];
     
     [manager openConnectSuccess:^(void) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self.view setUserInteractionEnabled:YES];
     } error:^(NSString *errorString) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -73,7 +73,10 @@
         [alert addAction:retryAction];
         [alert addAction:loginAction];
         [self presentViewController:alert animated:YES completion:nil];
-    }];
+    } loading:^(void) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [self.view setUserInteractionEnabled:NO];
+    } ];
 }
 
 @end

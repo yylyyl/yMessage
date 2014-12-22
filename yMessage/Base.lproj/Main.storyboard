@@ -603,7 +603,8 @@
                                             <rect key="frame" x="72" y="35" width="56" height="30"/>
                                         </variation>
                                         <connections>
-                                            <outlet property="delegate" destination="f8C-Uo-G17" id="B8Q-sJ-sTu"/>
+                                            <action selector="editingChanged:" destination="f8C-Uo-G17" eventType="editingChanged" id="Wwu-6D-97m"/>
+                                            <outlet property="delegate" destination="f8C-Uo-G17" id="Kcj-Sd-Av8"/>
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Wp-jv-WyC">
@@ -614,7 +615,8 @@
                                             <rect key="frame" x="136" y="35" width="56" height="30"/>
                                         </variation>
                                         <connections>
-                                            <outlet property="delegate" destination="f8C-Uo-G17" id="XW9-Vi-cKQ"/>
+                                            <action selector="editingChanged:" destination="f8C-Uo-G17" eventType="editingChanged" id="Rz4-Eh-mWI"/>
+                                            <outlet property="delegate" destination="f8C-Uo-G17" id="XqT-iM-wpB"/>
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Io3-gm-yR0">
@@ -625,7 +627,8 @@
                                             <rect key="frame" x="200" y="35" width="56" height="30"/>
                                         </variation>
                                         <connections>
-                                            <outlet property="delegate" destination="f8C-Uo-G17" id="kYX-fp-2Cx"/>
+                                            <action selector="editingChanged:" destination="f8C-Uo-G17" eventType="editingChanged" id="Sy2-m5-m8W"/>
+                                            <outlet property="delegate" destination="f8C-Uo-G17" id="j0r-04-62h"/>
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cvf-zo-wst">
@@ -636,7 +639,8 @@
                                             <rect key="frame" x="8" y="35" width="56" height="30"/>
                                         </variation>
                                         <connections>
-                                            <outlet property="delegate" destination="f8C-Uo-G17" id="NPg-qg-0uB"/>
+                                            <action selector="editingChanged:" destination="f8C-Uo-G17" eventType="editingChanged" id="Q9i-Ye-GVg"/>
+                                            <outlet property="delegate" destination="f8C-Uo-G17" id="0Jm-fB-gG3"/>
                                         </connections>
                                     </textField>
                                 </subviews>
@@ -731,9 +735,17 @@
                                 <action selector="cancelButtonPressed:" destination="f8C-Uo-G17" id="hEO-n2-5YP"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="wHG-8j-dkd">
+                            <connections>
+                                <action selector="donePressed:" destination="f8C-Uo-G17" id="iCI-vP-Qpw"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="textField1" destination="Cvf-zo-wst" id="M5n-IM-X5B"/>
+                        <outlet property="textField2" destination="t0Z-hj-Hlr" id="MVs-NV-4VZ"/>
+                        <outlet property="textField3" destination="0Wp-jv-WyC" id="48Y-nh-Ura"/>
+                        <outlet property="textField4" destination="Io3-gm-yR0" id="2aP-sQ-hoK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6gF-qU-GGf" userLabel="First Responder" sceneMemberID="firstResponder"/>

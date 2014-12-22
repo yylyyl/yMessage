@@ -7,21 +7,23 @@
 //
 
 #import "YMsgComm.h"
+#import "STHTTPRequest.h"
 
 @implementation YMsgComm
 
-- (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock {
+- (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock {
     self = [super init];
     if (self) {
         msgQueue = [NSMutableArray array];
         
-        session = [[AVSession alloc] init];
-        session.sessionDelegate = self;
-        session.signatureDelegate = self;
+        mySession = [[AVSession alloc] init];
+        mySession.sessionDelegate = self;
+        mySession.signatureDelegate = self;
         successBlock = nsuccessBlock;
         errorBlock = nerrorBlock;
+        loadingBlock = nloadingBlock;
         
-        [session openWithPeerId:myid watchedPeerIds:friendsids];
+        [mySession openWithPeerId:myid];
     }
     
     return self;
@@ -29,15 +31,33 @@
 
 - (void)sessionOpened:(AVSession *)session {
     NSLog(@"%@", @"sessionOpened");
-    if (successBlock) {
-        successBlock();
+    if (session.isOpen) {
+        if (successBlock) {
+            successBlock();
+        }
+    } else {
+        if (errorBlock) {
+            errorBlock(@"");
+        }
     }
+    
 }
 
 - (void)sessionFailed:(AVSession *)session error:(NSError *)error {
     NSLog(@"%@ %@", @"sessionFailed", [error localizedDescription]);
-    if (errorBlock) {
-        errorBlock([error localizedDescription]);
+}
+
+- (void)sessionPaused:(AVSession *)session {
+    NSLog(@"%@", @"sessionPaused");
+    if (loadingBlock) {
+        loadingBlock();
+    }
+}
+
+- (void)sessionResumed:(AVSession *)session {
+    NSLog(@"%@", @"sessionResumed");
+    if (successBlock) {
+        successBlock();
     }
 }
 
@@ -71,12 +91,77 @@
 
 - (void)sendMessage:(MsgQueueItem *)item {
     [msgQueue addObject:item];
-    [session sendMessage:item.message];
+    [mySession sendMessage:item.message];
 }
 
 - (AVSignature *)signatureForPeerWithPeerId:(NSString *)peerId watchedPeerIds:(NSArray *)watchedPeerIds action:(NSString *)action {
-    NSLog(@"Signature requested for %@", action);
-    return nil;
+    if (!watchedPeerIds) {
+        return nil;
+    }
+    NSLog(@"Signature requested for action %@ peeidID %@ watchPeerIds %@", action, peerId, watchedPeerIds);
+    
+    AVSignature* avSignature=[[AVSignature alloc] init];
+    
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"http://yyl.im/ym/sign.php"];
+    NSString *peerIdsString = [watchedPeerIds componentsJoinedByString:@":"];
+    r.GETDictionary = @{ @"peer_id":peerId, @"watch_peer_ids":peerIdsString };
+    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
+        NSLog(@"%@", body);
+    };
+    r.errorBlock = ^(NSError *error) {
+        NSLog(@"%@", [error localizedDescription]);
+    };
+    NSError *error = nil;
+    [r startSynchronousWithError:&error];
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+        return nil;
+    }
+    id object = [NSJSONSerialization
+                 JSONObjectWithData:r.responseData
+                 options:0
+                 error:&error];
+    
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+        return nil;
+    }
+    NSInteger timestamp;
+    NSString *nonce;
+    NSString *signature;
+    if([object isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary *results = object;
+        timestamp = [[results objectForKey:@"timestamp"] integerValue];
+        nonce = [results objectForKey:@"nonce"];
+        signature = [results objectForKey:@"signature"];
+    }
+    else
+    {
+        NSLog(@"%@ %@", @"Not json?!", r.responseString);
+        return nil;
+    }
+
+    [avSignature setTimestamp:timestamp];
+    [avSignature setNonce:nonce];
+    [avSignature setSignature:signature];;
+    [avSignature setSignedPeerIds:watchedPeerIds];
+    return avSignature;
+}
+
+#pragma mark - signature
+
+- (NSString *)signatureWithP {
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"http://yyl.im/ym/signature.php"];
+    r.GETDictionary = @{ @"paperid":@"6", @"q77":@"1", @"q80":@"hello" };
+    
+    NSError *error = nil;
+    [r startSynchronousWithError:&error];
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+        return nil;
+    }
+    return r.responseString;
 }
 
 @end
