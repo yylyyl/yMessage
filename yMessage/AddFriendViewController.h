@@ -9,11 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "YMessageManager.h"
 
+@protocol AddFriendViewControllerDelegate <NSObject>
+@required
+- (void)reloadList;
+@end
+
 @interface AddFriendViewController : UIViewController <UITextFieldDelegate> {
     YMessageManager *manager;
     
     id toCancel;
 }
+
+@property (weak, nonatomic) id<AddFriendViewControllerDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UITextField *textField1;
 @property (weak, nonatomic) IBOutlet UITextField *textField2;

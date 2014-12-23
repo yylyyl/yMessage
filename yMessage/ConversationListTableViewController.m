@@ -109,11 +109,33 @@
     // Pass the selected object to the new view controller.
     
     if ([segue.identifier isEqualToString:@"chat"]) {
+        YConversation *con = nil;
+        
         ConversationChatViewController *vc = segue.destinationViewController;
         
         NSIndexPath *selectedRowIndex = [self.tableView indexPathForSelectedRow];
-        vc.conversation = [conversationArray objectAtIndex:selectedRowIndex.row];
+        if (selectedRowIndex) {
+            con = [conversationArray objectAtIndex:selectedRowIndex.row];
+        } else {
+            con = chatConversation;
+            chatConversation = nil;
+        }
+        vc.conversation = con;
     }
+}
+
+- (void)startChat:(NSNumber *)uid {
+    for(YConversation *con in conversationArray) {
+        if ([[con getFriendUid] isEqualToNumber:uid]) {
+            chatConversation = con;
+            break;
+        }
+    }
+    if (!chatConversation) {
+        chatConversation = [[YConversation alloc] initWithArray:[NSMutableArray array] friendUid:uid];
+    }
+    
+    [self performSegueWithIdentifier:@"chat" sender:self];
 }
 
 @end

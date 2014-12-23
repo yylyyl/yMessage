@@ -9,6 +9,7 @@
 #import "TabBarViewController.h"
 #import "YMessageManager.h"
 #import "LoginTableViewController.h"
+#import "ConversationListTableViewController.h"
 #import "MBProgressHUD.h"
 
 @interface TabBarViewController ()
@@ -20,6 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startChat:) name:@"startChat" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,6 +84,18 @@
         [self.view setUserInteractionEnabled:NO];
         sessionStarted = NO;
     } ];
+}
+
+- (void)startChat:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    NSNumber *uid = [dict objectForKey:@"uid"];
+    
+    [self setSelectedIndex:0];
+    UINavigationController *navvc = [self.viewControllers firstObject];
+    [navvc popToRootViewControllerAnimated:YES];
+    
+    ConversationListTableViewController *cvc = [[navvc childViewControllers] firstObject];
+    [cvc startChat:uid];
 }
 
 @end

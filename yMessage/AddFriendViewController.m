@@ -44,6 +44,7 @@
     
     [[AFHTTPRequestOperationManager manager].operationQueue cancelAllOperations];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addFriend:) object:toCancel];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkAccept) object:nil];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
@@ -96,17 +97,17 @@
         if ([screenName isKindOfClass:[NSNull class]]) {
             [self performSelector:@selector(addFriend:) withObject:numberString afterDelay:2];
             toCancel = numberString;
-            //NSLog(@"Wait...");
+            NSLog(@"Wait...1");
             return;
         }
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Add this friend?" message:screenName preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *noAction = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"添加这个好友？" message:screenName preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *noAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
             [self.navigationItem.rightBarButtonItem setEnabled:YES];
             [self.view setUserInteractionEnabled:YES];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
         }];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Yes!" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"添加" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [self acceptFriend];
         }];
         [alert addAction:noAction];
@@ -134,7 +135,7 @@
     [manager checkAcceptSuccess:^(BOOL accept) {
         if (!accept) {
             [self performSelector:@selector(checkAccept) withObject:nil afterDelay:2];
-            toCancel = nil;
+            NSLog(@"Wait...2");
             return;
         }
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
@@ -150,7 +151,7 @@
 - (void)showError:(NSString *)errorString {
     [self.navigationItem.rightBarButtonItem setEnabled:YES];
     [self.view setUserInteractionEnabled:YES];
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [self.view setUserInteractionEnabled:YES];

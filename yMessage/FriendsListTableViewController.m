@@ -59,26 +59,11 @@
     return cell;
 }
 
-
-/*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
 /*
 // Override to support rearranging the table view.
@@ -94,14 +79,34 @@
 }
 */
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"addfriend"]) {
+        UINavigationController *navvc = segue.destinationViewController;
+        AddFriendViewController *vc = [navvc.childViewControllers firstObject];
+        vc.delegate = self;
+    }
+    
+    if ([segue.identifier isEqualToString:@"showFriend"]) {
+        FriendDetailTableViewController *vc = segue.destinationViewController;
+        vc.uid = [allUIDs objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
+        vc.screenName = [friendsDict objectForKey:[allUIDs objectAtIndex:[[self.tableView indexPathForSelectedRow] row]]];
+    }
 }
-*/
+
+- (void)reloadList {
+    friendsDict = [manager getFriendsDict];
+    allUIDs = [friendsDict allKeys];
+    
+    [self.tableView reloadData];
+}
+
+- (IBAction)deleteFriend:(UIStoryboardSegue *)segue {
+    
+}
 
 @end

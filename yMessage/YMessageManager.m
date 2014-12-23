@@ -92,7 +92,7 @@
             return;
         }
         
-        NSNumber *uid = [d objectForKey:@"uid"];
+        NSNumber *uid = [NSNumber numberWithInteger:[[d objectForKey:@"uid"] integerValue]];
         NSString *screen_name = [d objectForKey:@"screen_name"];
         
         [userDefaults setObject:loginusername forKey:@"username"];
@@ -135,7 +135,7 @@
             return;
         }
         
-        matchid = [d objectForKey:@"matchid"];
+        matchid = [NSNumber numberWithInteger:[[d objectForKey:@"matchid"] integerValue]];
         NSString *screen_name = [d objectForKey:@"screen_name"];
         
         if (successBlock) {
@@ -205,6 +205,15 @@
         }
         
         BOOL accept = [[d objectForKey:@"accept"] boolValue];
+        
+        if (accept) {
+            NSString *screenName = [d objectForKey:@"screen_name"];
+            NSNumber *uid = [NSNumber numberWithInteger:[[d objectForKey:@"uid"] integerValue]];
+            
+            [mydbq open];
+            [mydbq addFriendWith:uid screenName:screenName];
+            [mydbq close];
+        }
         
         if (successBlock) {
             successBlock(accept);

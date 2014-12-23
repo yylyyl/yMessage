@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		852CC5E91A494AFD00B6C79E /* FriendDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 852CC5E81A494AFD00B6C79E /* FriendDetailTableViewController.m */; };
 		85424A211A11063200419FF2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 85424A201A11063200419FF2 /* main.m */; };
 		85424A241A11063200419FF2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85424A231A11063200419FF2 /* AppDelegate.m */; };
 		85424A2D1A11063200419FF2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85424A2B1A11063200419FF2 /* Main.storyboard */; };
@@ -50,6 +51,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		852CC5E71A494AFD00B6C79E /* FriendDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailTableViewController.h; sourceTree = "<group>"; };
+		852CC5E81A494AFD00B6C79E /* FriendDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDetailTableViewController.m; sourceTree = "<group>"; };
 		85424A1B1A11063200419FF2 /* yMessage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yMessage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85424A1F1A11063200419FF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		85424A201A11063200419FF2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -312,6 +315,8 @@
 				85424A4E1A11095800419FF2 /* FriendsListTableViewController.m */,
 				858D05591A4896640050A6F7 /* AddFriendViewController.h */,
 				858D055A1A4896640050A6F7 /* AddFriendViewController.m */,
+				852CC5E71A494AFD00B6C79E /* FriendDetailTableViewController.h */,
+				852CC5E81A494AFD00B6C79E /* FriendDetailTableViewController.m */,
 			);
 			name = Friends;
 			path = ..;
@@ -396,6 +401,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				852CC5E91A494AFD00B6C79E /* FriendDetailTableViewController.m in Sources */,
 				85424A711A110D5700419FF2 /* AFURLSessionManager.m in Sources */,
 				85727B9E1A47302300FA42B4 /* LoginTableViewController.m in Sources */,
 				85424A491A11080B00419FF2 /* ConversationListTableViewController.m in Sources */,

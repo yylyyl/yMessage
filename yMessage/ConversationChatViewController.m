@@ -29,9 +29,17 @@
     
     self.tableView.contentInset = UIEdgeInsetsMake(self.tableView.contentInset.top, self.tableView.contentInset.left, 44, self.tableView.contentInset.right);
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(self.tableView.scrollIndicatorInsets.top, self.tableView.scrollIndicatorInsets.left, 44, self.tableView.scrollIndicatorInsets.right);
+    tableViewOldInsets = self.tableView.contentInset;
+    tableViewScrollOldInsets = self.tableView.scrollIndicatorInsets;
     
     manager = [YMessageManager sharedInstance];
     self.navigationItem.title = [[manager getFriendsDict] objectForKey:[self.conversation getFriendUid]];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar.layer removeAllAnimations];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,8 +63,8 @@
     //self.textViewBottomConst.constant = height;
     self.keyBoardHeightConstraint.constant = kbHeight;
     
-    tableViewOldInsets = self.tableView.contentInset;
-    tableViewScrollOldInsets   = self.tableView.scrollIndicatorInsets;
+    //tableViewOldInsets = self.tableView.contentInset;
+    //tableViewScrollOldInsets   = self.tableView.scrollIndicatorInsets;
     self.tableView.contentInset = UIEdgeInsetsMake(tableViewOldInsets.top, tableViewOldInsets.left, kbHeight + 44, tableViewOldInsets.right);
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(tableViewScrollOldInsets.top, tableViewScrollOldInsets.left, kbHeight + 44, tableViewScrollOldInsets.right);
     
@@ -98,8 +106,11 @@
     
     // Configure the cell...
     YConversationRow *row = [[self.conversation getConversationArray] objectAtIndex:indexPath.row];
-    
-    cell.fromLabel.text = [[manager getFriendsDict] objectForKey:[row getUID]];
+    if ([[row getUID] isEqualToNumber:[manager getUID]]) {
+        cell.fromLabel.text = @"我";
+    } else {
+        cell.fromLabel.text = [[manager getFriendsDict] objectForKey:[row getUID]];
+    }
     cell.contentLabel.text = [row getContent];
     
     NSDateFormatter* fmt = [[NSDateFormatter alloc] init];
@@ -159,6 +170,14 @@
 */
 
 - (IBAction)sendButtonPressed:(id)sender {
+    
+    NSInteger trow = [[self.conversation getConversationArray] count];
+    YConversationRow *row = [[YConversationRow alloc] initWithDict:@{@"uid": [manager getUID], @"content": self.textField.text, @"date": [NSDate date]}];
+    
+    [[self.conversation getConversationArray] addObject:row];
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:trow inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
     self.textField.text = @"";
+    
 }
 @end

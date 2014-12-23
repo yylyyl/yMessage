@@ -12,6 +12,10 @@
 @interface ConversationListTableViewController : UITableViewController {
     YMessageManager *manager;
     NSMutableArray *conversationArray;
+    
+    YConversation *chatConversation;
 }
+
+- (void)startChat:(NSNumber *)uid;
 
 @end
