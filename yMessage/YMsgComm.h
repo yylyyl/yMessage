@@ -32,5 +32,6 @@
 
 - (id)initWithMyId:(NSString *)myid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock;
 - (void)open;
+- (void)close;
 
 @end

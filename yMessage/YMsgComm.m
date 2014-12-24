@@ -33,6 +33,10 @@
     [mySession openWithPeerId:myid];
 }
 
+- (void)close {
+    [mySession close];
+}
+
 - (void)sessionOpened:(AVSession *)session {
     NSLog(@"%@", @"sessionOpened");
     if (session.isOpen) {

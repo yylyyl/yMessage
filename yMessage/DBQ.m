@@ -54,6 +54,13 @@
     [mydb close];
 }
 
+- (void)clearAllData {
+    NSString *dropString = @"DROP TABLE IF EXISTS friends;"
+                            "DROP TABLE IF EXISTS conversation_rows;"
+                            "DROP TABLE IF EXISTS conversations;";
+    [mydb executeUpdate:dropString];
+}
+
 - (NSMutableDictionary *)getFriends {
     FMResultSet *s = [mydb executeQuery:@"SELECT * FROM friends"];
     NSMutableDictionary *tmpDict = [NSMutableDictionary dictionary];

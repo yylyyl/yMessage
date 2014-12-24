@@ -17,6 +17,4 @@
 - (IBAction)passwordReturn:(id)sender;
 - (IBAction)saveButtonPressed:(id)sender;
 
-@property (nonatomic, strong) void (^afterLoginBlock)(void);
-
 @end

@@ -27,8 +27,10 @@
 - (NSMutableArray *)getConversationArray;
 
 - (void)loginUsername:(NSString *)loginusername password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
+- (void)logout;
 - (BOOL)logined;
 - (NSNumber *)getUID;
+- (NSString *)getScreenName;
 
 - (void)openConnectSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock loading:(void (^)(void))loadingBlock;
 

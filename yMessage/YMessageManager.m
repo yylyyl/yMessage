@@ -92,6 +92,8 @@
             return;
         }
         
+        NSLog(@"%@", d);
+        
         NSNumber *uid = [NSNumber numberWithInteger:[[d objectForKey:@"uid"] integerValue]];
         NSString *screen_name = [d objectForKey:@"screen_name"];
         
@@ -100,6 +102,16 @@
         [userDefaults setInteger:[uid unsignedIntegerValue] forKey:@"uid"];
         [userDefaults setObject:screen_name forKey:@"screen_name"];
         [userDefaults synchronize];
+        
+        // load friend list
+        NSArray *friends = [d objectForKey:@"friends"];
+        [mydbq open];
+        for (NSDictionary *f in friends) {
+            NSNumber *fuid = [NSNumber numberWithInteger:[[f objectForKey:@"id"] integerValue]];
+            NSString *fname = [f objectForKey:@"screen_name"];
+            [mydbq addFriendWith:fuid screenName:fname];
+        }
+        [mydbq close];
         
         if (successBlock) {
             successBlock();
@@ -111,6 +123,19 @@
             errorBlock([error localizedDescription]);
         }
     }];
+}
+
+- (void)logout {
+    [comm close];
+    
+    [userDefaults removeObjectForKey:@"username"];
+    [userDefaults removeObjectForKey:@"hpassword"];
+    [userDefaults removeObjectForKey:@"uid"];
+    [userDefaults removeObjectForKey:@"screen_name"];
+    [userDefaults synchronize];
+    [mydbq open];
+    [mydbq clearAllData];
+    [mydbq close];
 }
 
 #pragma mark - adding friends

@@ -22,6 +22,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startChat:) name:@"startChat" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedIn) name:@"loginNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedOut) name:@"logoutNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -44,13 +46,6 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqualToString:@"login"]) {
-        UINavigationController *navvc = segue.destinationViewController;
-        LoginTableViewController *vc = [navvc.childViewControllers firstObject];
-        vc.afterLoginBlock = ^(void) {
-            [self startSession];
-        };
-    }
 }
 
 - (void)startSession {
@@ -96,6 +91,20 @@
     
     ConversationListTableViewController *cvc = [[navvc childViewControllers] firstObject];
     [cvc startChat:uid];
+}
+
+- (void)loggedIn {
+    [self startSession];
+    
+    [self setSelectedIndex:0];
+    UINavigationController *navvc = [self.viewControllers firstObject];
+    [navvc popToRootViewControllerAnimated:YES];
+}
+
+- (void)loggedOut {
+    [self performSegueWithIdentifier:@"login" sender:self];
+    YMessageManager *manager = [YMessageManager sharedInstance];
+    [manager logout];
 }
 
 @end

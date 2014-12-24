@@ -109,9 +109,8 @@
         [self.view setUserInteractionEnabled:YES];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self dismissViewControllerAnimated:YES completion:nil];
-        if (self.afterLoginBlock) {
-            self.afterLoginBlock();
-        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loginNotification" object:self];
+        
     } error:^(NSString *errorString) {
         [self.navigationController.navigationBar setUserInteractionEnabled:YES];
         [self.view setUserInteractionEnabled:YES];

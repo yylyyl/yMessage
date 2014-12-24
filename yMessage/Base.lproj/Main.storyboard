@@ -818,10 +818,10 @@
             </objects>
             <point key="canvasLocation" x="543" y="519"/>
         </scene>
-        <!--View Controller-->
+        <!--Profile View Controller-->
         <scene sceneID="vqZ-ox-xRm">
             <objects>
-                <viewController id="6kQ-2c-bJy" sceneMemberID="viewController">
+                <viewController id="6kQ-2c-bJy" customClass="ProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hYb-MQ-CrZ"/>
                         <viewControllerLayoutGuide type="bottom" id="R2e-Sc-hND"/>
@@ -875,6 +875,9 @@
                                         <include reference="yR4-3i-LKU"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <action selector="logoutPressed:" destination="6kQ-2c-bJy" eventType="touchUpInside" id="RRW-uy-IlE"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -910,6 +913,9 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="2Pl-zY-qNh"/>
+                    <connections>
+                        <outlet property="usernameLabel" destination="HLc-9c-ccB" id="tX8-hv-Qzd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9X8-se-Ivp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

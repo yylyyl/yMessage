@@ -17,6 +17,7 @@
 + (DBQ *)sharedInstance;
 - (void)open;
 - (void)close;
+- (void)clearAllData;
 
 - (NSMutableDictionary *)getFriends;
 - (NSMutableArray *)getConversations;
