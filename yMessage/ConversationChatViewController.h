@@ -10,10 +10,8 @@
 #import "YMessageManager.h"
 #import "YConversation.h"
 
-@interface ConversationChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
+@interface ConversationChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
     
-    UIEdgeInsets tableViewOldInsets;
-    UIEdgeInsets tableViewScrollOldInsets;
     YMessageManager *manager;
     
 }

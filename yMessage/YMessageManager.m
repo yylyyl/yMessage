@@ -60,6 +60,10 @@
     [comm open];
 }
 
+- (YMsgComm *)getComm {
+    return comm;
+}
+
 - (NSMutableDictionary *)getFriendsDict {
     return friendsDict;
 }

@@ -8,6 +8,7 @@
 
 #import "ConversationListTableViewController.h"
 #import "ConversationChatViewController.h"
+#import "ListTableViewCell.h"
 
 @interface ConversationListTableViewController ()
 
@@ -26,6 +27,10 @@
     
     manager = [YMessageManager sharedInstance];
     conversationArray = [manager getConversationArray];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startChat:) name:@"startChat" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentMessage:) name:@"sentMessage" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"receivedMessage" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,6 +39,10 @@
 }
 
 #pragma mark - Table view data source
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
@@ -46,23 +55,25 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"con" forIndexPath:indexPath];
+    ListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"con" forIndexPath:indexPath];
     
     // Configure the cell...
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"con"];
-    }
-    
     YConversation *conversation = [conversationArray objectAtIndex:[indexPath row]];
-    cell.textLabel.text = [conversation getLatestText];
+    YConversationRow *row = [conversation getLatestRow];
+    cell.contentLabel.text = [row getContent];
     
     NSDateFormatter* fmt = [[NSDateFormatter alloc] init];
-    fmt.dateStyle = kCFDateFormatterShortStyle;
-    fmt.timeStyle = kCFDateFormatterShortStyle;
+    fmt.dateFormat = @"MM-dd HH:mm";
     fmt.locale = [NSLocale systemLocale];
-    NSString* dateString = [fmt stringFromDate:[conversation getLatestDate]];
+    NSString* dateString = [fmt stringFromDate:[row getDate]];
     
-    cell.detailTextLabel.text = dateString;
+    cell.timeLabel.text = dateString;
+    
+    if ([[row getUID] isEqualToNumber:[manager getUID]]) {
+        cell.fromLabel.text = @"我";
+    } else {
+        cell.fromLabel.text = [[manager getFriendsDict] objectForKey:[row getUID]];
+    }
     
     return cell;
 }
@@ -124,7 +135,10 @@
     }
 }
 
-- (void)startChat:(NSNumber *)uid {
+- (void)startChat:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    NSNumber *uid = [dict objectForKey:@"uid"];
+    
     for(YConversation *con in conversationArray) {
         if ([[con getFriendUid] isEqualToNumber:uid]) {
             chatConversation = con;
@@ -136,6 +150,51 @@
     }
     
     [self performSegueWithIdentifier:@"chat" sender:self];
+}
+
+- (void)sentMessage:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    YConversation *con = [dict objectForKey:@"conversation"];
+    
+    if ([conversationArray containsObject:con]) {
+        NSUInteger indexRow = [conversationArray indexOfObject:con];
+        [conversationArray exchangeObjectAtIndex:0 withObjectAtIndex:indexRow];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    } else {
+        [conversationArray insertObject:con atIndex:0];
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+}
+
+- (void)receivedMessage:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    NSNumber *uid = [dict objectForKey:@"uid"];
+    YConversation *updatedCon = nil;
+    
+    for (YConversation *con in conversationArray) {
+        if ([[con getFriendUid] isEqualToNumber:uid]) {
+            updatedCon = con;
+            break;
+        }
+    }
+    
+    if (!updatedCon) {
+        NSMutableArray *array = [NSMutableArray array];
+        YConversationRow *row = [[YConversationRow alloc] initWithDict:dict];
+        [array addObject:row];
+        updatedCon = [[YConversation alloc] initWithArray:array friendUid:uid];
+        [conversationArray insertObject:updatedCon atIndex:0];
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    } else {
+        YConversationRow *row = [[YConversationRow alloc] initWithDict:dict];
+        NSMutableArray *array = [updatedCon getConversationArray];
+        [array addObject:row];
+        
+        [self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:[conversationArray indexOfObject:updatedCon] inSection:0] toIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 @end

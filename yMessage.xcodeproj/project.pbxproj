@@ -49,6 +49,7 @@
 		85727BAC1A4814F700FA42B4 /* ConversationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAB1A4814F700FA42B4 /* ConversationTableViewCell.m */; };
 		85727BB01A4854C900FA42B4 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */; };
 		858D055B1A4896640050A6F7 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 858D055A1A4896640050A6F7 /* AddFriendViewController.m */; };
+		85E5AF311A4C85740005EBA6 /* ListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85E5AF301A4C85740005EBA6 /* ListTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -132,6 +133,8 @@
 		85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		858D05591A4896640050A6F7 /* AddFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendViewController.h; path = yMessage/AddFriendViewController.h; sourceTree = "<group>"; };
 		858D055A1A4896640050A6F7 /* AddFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendViewController.m; path = yMessage/AddFriendViewController.m; sourceTree = "<group>"; };
+		85E5AF2F1A4C85740005EBA6 /* ListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListTableViewCell.h; path = ../ListTableViewCell.h; sourceTree = "<group>"; };
+		85E5AF301A4C85740005EBA6 /* ListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ListTableViewCell.m; path = ../ListTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +186,8 @@
 				852CC5EA1A4AB87F00B6C79E /* ProfileViewController.h */,
 				852CC5EB1A4AB87F00B6C79E /* ProfileViewController.m */,
 				85D111041A2CB72600C434A9 /* Friends */,
+				85E5AF2F1A4C85740005EBA6 /* ListTableViewCell.h */,
+				85E5AF301A4C85740005EBA6 /* ListTableViewCell.m */,
 				85424A471A11080B00419FF2 /* ConversationListTableViewController.h */,
 				85424A481A11080B00419FF2 /* ConversationListTableViewController.m */,
 				85727BAD1A4815CF00FA42B4 /* Chat */,
@@ -418,6 +423,7 @@
 				85727BAC1A4814F700FA42B4 /* ConversationTableViewCell.m in Sources */,
 				85424A6C1A110D5700419FF2 /* AFNetworkReachabilityManager.m in Sources */,
 				85727B941A46E13B00FA42B4 /* FMDatabasePool.m in Sources */,
+				85E5AF311A4C85740005EBA6 /* ListTableViewCell.m in Sources */,
 				85727B961A46E13B00FA42B4 /* FMResultSet.m in Sources */,
 				85727B931A46E13B00FA42B4 /* FMDatabaseAdditions.m in Sources */,
 				85424A4F1A11095800419FF2 /* FriendsListTableViewController.m in Sources */,

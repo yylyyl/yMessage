@@ -9,6 +9,10 @@
 #import "YMsgComm.h"
 #import "STHTTPRequest.h"
 
+@implementation MsgQueueItem
+
+@end
+
 @implementation YMsgComm
 
 - (id)initWithMyId:(NSString *)nmyid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock {
@@ -71,6 +75,18 @@
 
 - (void)session:(AVSession *)session didReceiveMessage:(AVMessage *)message {
     NSLog(@"%@", @"didReceiveMessage");
+    
+    if (message.type != AVMessageTypePeerIn) {
+        NSLog(@"Unknown msg: %@", message);
+        return;
+    }
+    
+    NSNumber *uid = [NSNumber numberWithInteger:[message.fromPeerId integerValue]];
+    NSString *content = message.payload;
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:message.timestamp];
+    NSDictionary *dict = @{@"uid": uid, @"content": content, @"date": date};
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedMessage" object:self userInfo:dict];
 }
 
 - (void)session:(AVSession *)session messageSendFinished:(AVMessage *)message {
@@ -98,6 +114,10 @@
 }
 
 - (void)sendMessage:(MsgQueueItem *)item {
+    if (![mySession peerIdIsWatching:item.message.toPeerId]) {
+        [mySession watchPeerIds:@[item.message.toPeerId]];
+    }
+    
     [msgQueue addObject:item];
     [mySession sendMessage:item.message];
 }
@@ -157,19 +177,8 @@
     return avSignature;
 }
 
-#pragma mark - signature
-
-- (NSString *)signatureWithP {
-    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"http://yyl.im/ym/signature.php"];
-    r.GETDictionary = @{ @"paperid":@"6", @"q77":@"1", @"q80":@"hello" };
-    
-    NSError *error = nil;
-    [r startSynchronousWithError:&error];
-    if (error) {
-        NSLog(@"%@", [error localizedDescription]);
-        return nil;
-    }
-    return r.responseString;
+- (AVSession *)getSession {
+    return mySession;
 }
 
 @end

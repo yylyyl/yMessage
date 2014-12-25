@@ -78,7 +78,7 @@
 }
 
 - (NSMutableArray *)getConversationArrayWithConId:(NSUInteger)conid {
-    NSNumber *conidNumber = [NSNumber numberWithUnsignedInt:conid];
+    NSNumber *conidNumber = [NSNumber numberWithUnsignedInteger:conid];
     FMResultSet *s = [mydb executeQuery:@"SELECT * FROM conversation_rows WHERE conid=? ORDER BY id DESC LIMIT 0, 20", conidNumber];
     NSMutableArray *tmpArray = [NSMutableArray array];
     while ([s next]) {
@@ -92,8 +92,19 @@
     return tmpArray;
 }
 
-- (void)addConversationRowWithConId:(NSNumber *)conid content:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid {
-    [mydb executeUpdate:@"INSERT INTO conversation_rows (conid, content, timestamp, uid) VALUES(?, ?, ?, ?)", conid, content, [NSNumber numberWithUnsignedInteger:[date timeIntervalSince1970]], uid];
+- (void)addConversationRowContent:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid {
+    NSString *checkConSQL = @"SELECT * FROM conversations WHERE uid=?";
+    FMResultSet *s = [mydb executeQuery:checkConSQL, uid];
+    NSInteger cid;
+    if (![s next]) {
+        NSString *addConSQL = @"INSERT INTO conversations(uid) VALUES(?)";
+        [mydb executeQuery:addConSQL, uid];
+        cid = (int)[mydb lastInsertRowId];
+    } else {
+        cid = [s intForColumn:@"id"];
+    }
+    
+    [mydb executeUpdate:@"INSERT INTO conversation_rows (conid, content, timestamp, uid) VALUES(?, ?, ?, ?)", cid, content, [NSNumber numberWithUnsignedInteger:[date timeIntervalSince1970]], uid];
 }
 
 - (NSMutableArray *)getConversations {

@@ -16,6 +16,4 @@
     YConversation *chatConversation;
 }
 
-- (void)startChat:(NSNumber *)uid;
-
 @end

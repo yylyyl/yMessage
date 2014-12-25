@@ -26,14 +26,15 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"receivedMessage" object:nil];
     
-    self.tableView.contentInset = UIEdgeInsetsMake(self.tableView.contentInset.top, self.tableView.contentInset.left, 44, self.tableView.contentInset.right);
-    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(self.tableView.scrollIndicatorInsets.top, self.tableView.scrollIndicatorInsets.left, 44, self.tableView.scrollIndicatorInsets.right);
-    tableViewOldInsets = self.tableView.contentInset;
-    tableViewScrollOldInsets = self.tableView.scrollIndicatorInsets;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 44, 0);
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 44, 0);
     
     manager = [YMessageManager sharedInstance];
     self.navigationItem.title = [[manager getFriendsDict] objectForKey:[self.conversation getFriendUid]];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -57,20 +58,21 @@
     CGRect finalKeyboardFrame = [self.view convertRect:keyboardFrame fromView:self.view.window];
     
     int kbHeight = finalKeyboardFrame.size.height;
-    
-    //int height = kbHeight + self.textViewBottomConst.constant;
-    
+        
     //self.textViewBottomConst.constant = height;
     self.keyBoardHeightConstraint.constant = kbHeight;
     
-    //tableViewOldInsets = self.tableView.contentInset;
-    //tableViewScrollOldInsets   = self.tableView.scrollIndicatorInsets;
-    self.tableView.contentInset = UIEdgeInsetsMake(tableViewOldInsets.top, tableViewOldInsets.left, kbHeight + 44, tableViewOldInsets.right);
-    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(tableViewScrollOldInsets.top, tableViewScrollOldInsets.left, kbHeight + 44, tableViewScrollOldInsets.right);
+    self.tableView.contentInset = UIEdgeInsetsMake(64, 0, kbHeight + 44, 0);
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, kbHeight + 44, 0);
     
     [UIView animateWithDuration:animationDuration animations:^{
         [self.view layoutIfNeeded];
     }];
+    
+    if ([[self.conversation getConversationArray] count]) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[self.conversation getConversationArray] count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
@@ -80,8 +82,8 @@
     
     NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    self.tableView.contentInset = tableViewOldInsets;
-    self.tableView.scrollIndicatorInsets = tableViewScrollOldInsets;
+    self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 44, 0);
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 44, 0);
     
     [UIView animateWithDuration:animationDuration animations:^{
         [self.view layoutIfNeeded];
@@ -90,6 +92,10 @@
 
 
 #pragma mark - Table view data source
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
@@ -106,6 +112,13 @@
     
     // Configure the cell...
     YConversationRow *row = [[self.conversation getConversationArray] objectAtIndex:indexPath.row];
+    
+    [self configureCell:row cell:cell];
+    
+    return cell;
+}
+
+- (void)configureCell:(YConversationRow *)row cell:(ConversationTableViewCell *)cell {
     if ([[row getUID] isEqualToNumber:[manager getUID]]) {
         cell.fromLabel.text = @"我";
     } else {
@@ -120,8 +133,19 @@
     NSString* dateString = [fmt stringFromDate:[row getDate]];
     
     cell.timeLabel.text = dateString;
+    if ([row isSending]) {
+        [cell.indicator startAnimating];
+        cell.timeLabel.hidden = YES;
+    } else {
+        [cell.indicator stopAnimating];
+        cell.timeLabel.hidden = NO;
+    }
     
-    return cell;
+    if ([row isError]) {
+        [cell.errorLabel setHidden:NO];
+    } else {
+        [cell.errorLabel setHidden:YES];
+    }
 }
 
 
@@ -169,15 +193,59 @@
 }
 */
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self sendButtonPressed:textField];
+    return NO;
+}
+
 - (IBAction)sendButtonPressed:(id)sender {
+    if ([self.textField.text isEqualToString:@""]) {
+        return;
+    }
     
     NSInteger trow = [[self.conversation getConversationArray] count];
-    YConversationRow *row = [[YConversationRow alloc] initWithDict:@{@"uid": [manager getUID], @"content": self.textField.text, @"date": [NSDate date]}];
+    YConversationRow *row = [[YConversationRow alloc] initWithDict:@{@"uid": [manager getUID], @"content": self.textField.text, @"date": [NSDate date], @"sending": @YES}];
     
     [[self.conversation getConversationArray] addObject:row];
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:trow inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
     
-    self.textField.text = @"";
+    MsgQueueItem *item = [[MsgQueueItem alloc] init];
+    YMsgComm *comm = [manager getComm];
+    item.message = [AVMessage messageForPeerWithSession:[comm getSession] toPeerId:[[self.conversation getFriendUid] stringValue] payload:self.textField.text];
+    item.successBlock = ^(void) {
+        [row sent];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:trow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    };
+    item.errorBlock = ^(NSString *errorString) {
+        [row sent];
+        [row error];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:trow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Failed to send message" message:errorString preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:okAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    };
+    [comm sendMessage:item];
     
+    self.textField.text = @"";
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[self.conversation getConversationArray] count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sentMessage" object:self userInfo:@{@"conversation": self.conversation}];
+    
+}
+
+- (void)receivedMessage:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    NSNumber *uid = [dict objectForKey:@"uid"];
+    if (![uid isEqualToNumber:[self.conversation getFriendUid]]) {
+        return;
+    }
+    
+    YConversationRow *row = [[YConversationRow alloc] initWithDict:dict];
+    NSMutableArray *array = [self.conversation getConversationArray];
+    [array addObject:row];
+    
+    NSIndexPath *path = [NSIndexPath indexPathForRow:[array count] - 1 inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 @end

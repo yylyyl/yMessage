@@ -53,6 +53,7 @@
     if ([textField.text length] == 1) {
         NSInteger next = [textField tag] + 1;
         if (next == 5) {
+            [self donePressed:sender];
             return;
         }
         

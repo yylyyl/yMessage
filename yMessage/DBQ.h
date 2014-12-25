@@ -23,6 +23,6 @@
 - (NSMutableArray *)getConversations;
 
 - (void)addFriendWith:(NSNumber *)uid screenName:(NSString *)screenName;
-- (void)addConversationRowWithConId:(NSNumber *)conid content:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid;
+- (void)addConversationRowContent:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid;
 
 @end

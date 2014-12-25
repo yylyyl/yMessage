@@ -9,13 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @interface YConversationRow : NSObject {
-    NSDictionary *rowDict;
+    NSMutableDictionary *rowDict;
 }
 
 - (id)initWithDict:(NSDictionary *)dict;
 - (NSNumber *)getUID;
 - (NSString *)getContent;
 - (NSDate *)getDate;
+- (BOOL)isSending;
+- (void)sent;
+- (BOOL)isError;
+- (void)error;
 
 @end
 
@@ -26,8 +30,7 @@
 
 - (id)initWithArray:(NSMutableArray *)array friendUid:(NSNumber *)uid;
 - (NSNumber *)getFriendUid;
-- (NSString *)getLatestText;
-- (NSDate *)getLatestDate;
+- (YConversationRow *)getLatestRow;
 - (NSMutableArray *)getConversationArray;
 
 @end

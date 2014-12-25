@@ -13,7 +13,7 @@
 - (id)initWithDict:(NSDictionary *)dict {
     self = [super init];
     if (self) {
-        rowDict = dict;
+        rowDict = [NSMutableDictionary dictionaryWithDictionary:dict];
     }
     
     return self;
@@ -29,6 +29,22 @@
 
 - (NSDate *)getDate {
     return [rowDict objectForKey:@"date"];
+}
+
+- (BOOL)isSending {
+    return [[rowDict objectForKey:@"sending"] boolValue];
+}
+
+- (BOOL)isError {
+    return [[rowDict objectForKey:@"error"] boolValue];
+}
+
+- (void)sent {
+    [rowDict setObject:@NO forKey:@"sending"];
+}
+
+- (void)error {
+    [rowDict setObject:@YES forKey:@"error"];
 }
 
 @end
@@ -49,14 +65,8 @@
     return friendUid;
 }
 
-- (NSString *)getLatestText {
-    YConversationRow *row = [conversationArray lastObject];
-    return [row getContent];
-}
-
-- (NSDate *)getLatestDate {
-    YConversationRow *row = [conversationArray lastObject];
-    return [row getDate];
+- (YConversationRow *)getLatestRow {
+    return [conversationArray lastObject];
 }
 
 - (NSMutableArray *)getConversationArray {

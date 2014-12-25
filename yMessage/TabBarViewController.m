@@ -82,15 +82,10 @@
 }
 
 - (void)startChat:(NSNotification *)notification {
-    NSDictionary *dict = [notification userInfo];
-    NSNumber *uid = [dict objectForKey:@"uid"];
-    
     [self setSelectedIndex:0];
     UINavigationController *navvc = [self.viewControllers firstObject];
     [navvc popToRootViewControllerAnimated:YES];
     
-    ConversationListTableViewController *cvc = [[navvc childViewControllers] firstObject];
-    [cvc startChat:uid];
 }
 
 - (void)loggedIn {

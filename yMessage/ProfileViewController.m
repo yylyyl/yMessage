@@ -47,6 +47,15 @@
 }
 
 - (IBAction)logoutPressed:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"logoutNotification" object:self];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"真的要注销？" message:@"所有聊天记录将会被删除" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"注销" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"logoutNotification" object:self];
+        
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:okAction];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
+    
 }
 @end
