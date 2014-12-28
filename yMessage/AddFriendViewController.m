@@ -53,7 +53,7 @@
     if ([textField.text length] == 1) {
         NSInteger next = [textField tag] + 1;
         if (next == 5) {
-            [self donePressed:sender];
+            //[self donePressed:sender];
             return;
         }
         
@@ -143,6 +143,8 @@
         [self.view setUserInteractionEnabled:YES];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self dismissViewControllerAnimated:YES completion:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"friendAdded" object:nil];
         
     } error:^(NSString *errorString) {
         [self showError:errorString];

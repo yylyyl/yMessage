@@ -15,6 +15,8 @@
     YMessageManager *manager;
     NSMutableDictionary *friendsDict;
     NSArray *allUIDs;
+    
+    NSNumber *showingFriendUID;
 }
 
 - (IBAction)deleteFriend:(UIStoryboardSegue *)segue;

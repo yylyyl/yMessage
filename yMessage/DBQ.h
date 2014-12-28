@@ -15,14 +15,18 @@
 }
 
 + (DBQ *)sharedInstance;
-- (void)open;
-- (void)close;
 - (void)clearAllData;
 
 - (NSMutableDictionary *)getFriends;
 - (NSMutableArray *)getConversations;
 
 - (void)addFriendWith:(NSNumber *)uid screenName:(NSString *)screenName;
-- (void)addConversationRowContent:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid;
+- (void)deleteFriendWithUid:(NSNumber *)uid;
+
+- (NSNumber *)addConversationRowContent:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid unread:(BOOL)unread error:(BOOL)error sending:(BOOL)sending;
+- (void)setConversationReadUid:(NSNumber *)uid;
+
+- (void)setRowId:(NSNumber *)rid Sending:(BOOL)sending error:(BOOL)error;
+- (void)deleteConversationWithUid:(NSNumber *)uid;
 
 @end

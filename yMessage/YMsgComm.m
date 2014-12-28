@@ -15,7 +15,7 @@
 
 @implementation YMsgComm
 
-- (id)initWithMyId:(NSString *)nmyid myFriendsIds:(NSArray *)friendsids success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock {
+- (id)initWithMyId:(NSString *)nmyid success:(void (^)(void))nsuccessBlock error:(void (^)(NSString *))nerrorBlock loading:(void (^)(void))nloadingBlock {
     self = [super init];
     if (self) {
         msgQueue = [NSMutableArray array];
@@ -27,6 +27,8 @@
         errorBlock = nerrorBlock;
         loadingBlock = nloadingBlock;
         myid = nmyid;
+        
+        mydbq = [DBQ sharedInstance];
         
     }
     
@@ -81,9 +83,34 @@
         return;
     }
     
+    if ([message.fromPeerId isEqualToString:@"0"]) {
+        NSLog(@"Root message: %@", message.payload);
+        NSError *error;
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[message.payload dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSString *action = [dict objectForKey:@"action"];
+        if ([action isEqualToString:@"deleteFriend"]) {
+            NSNumber *uid = [NSNumber numberWithInteger:[[dict objectForKey:@"uid"] integerValue]];
+            NSDictionary *userinfo = @{@"uid": uid};
+            
+            [mydbq deleteConversationWithUid:uid];
+            [mydbq deleteFriendWithUid:uid];
+            
+            [mySession unwatchPeerIds:@[[uid stringValue]] callback:^(BOOL succeeded, NSError *error) {}];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NCdeleteFriend" object:self userInfo:userinfo];
+        }
+        
+        return;
+    }
+    
     NSNumber *uid = [NSNumber numberWithInteger:[message.fromPeerId integerValue]];
     NSString *content = message.payload;
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:message.timestamp];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:message.timestamp/1000];
     NSDictionary *dict = @{@"uid": uid, @"content": content, @"date": date};
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedMessage" object:self userInfo:dict];
@@ -95,7 +122,9 @@
             if (item.successBlock) {
                 item.successBlock();
             }
+            [mydbq setRowId:item.rowID Sending:NO error:NO];
             [msgQueue removeObject:item];
+            
             break;
         }
     }
@@ -108,6 +137,7 @@
                 item.errorBlock([error localizedDescription]);
             }
             [msgQueue removeObject:item];
+            [mydbq setRowId:item.rowID Sending:NO error:YES];
             break;
         }
     }
@@ -120,6 +150,11 @@
     
     [msgQueue addObject:item];
     [mySession sendMessage:item.message];
+    
+    NSDate *date = [NSDate date];
+    NSNumber *uid = [NSNumber numberWithInteger:[item.message.toPeerId integerValue]];
+    NSNumber *rowID = [mydbq addConversationRowContent:item.message.payload date:date uid:uid unread:NO error:NO sending:YES];
+    item.rowID = rowID;
 }
 
 - (AVSignature *)signatureForPeerWithPeerId:(NSString *)peerId watchedPeerIds:(NSArray *)watchedPeerIds action:(NSString *)action {
@@ -169,6 +204,7 @@
         NSLog(@"%@ %@", @"Not json?!", r.responseString);
         return nil;
     }
+    NSLog(@"%@", @"Signed");
 
     [avSignature setTimestamp:timestamp];
     [avSignature setNonce:nonce];

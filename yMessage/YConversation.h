@@ -26,11 +26,14 @@
 @interface YConversation : NSObject {
     NSMutableArray *conversationArray;
     NSNumber *friendUid;
+    BOOL unread;
 }
 
 - (id)initWithArray:(NSMutableArray *)array friendUid:(NSNumber *)uid;
 - (NSNumber *)getFriendUid;
 - (YConversationRow *)getLatestRow;
 - (NSMutableArray *)getConversationArray;
+- (BOOL)hasUnread;
+- (void)setUnread:(BOOL)nunRead;
 
 @end

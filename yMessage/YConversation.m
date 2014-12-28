@@ -19,6 +19,10 @@
     return self;
 }
 
+- (NSNumber *)getRowID {
+    return [rowDict objectForKey:@"id"];
+}
+
 - (NSNumber *)getUID {
     return [rowDict objectForKey:@"uid"];
 }
@@ -71,6 +75,14 @@
 
 - (NSMutableArray *)getConversationArray {
     return conversationArray;
+}
+
+- (BOOL)hasUnread {
+    return unread;
+}
+
+- (void)setUnread:(BOOL)nunRead {
+    unread = nunRead;
 }
 
 @end

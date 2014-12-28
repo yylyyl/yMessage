@@ -1,3 +1,4 @@
+
 //
 //  ConversationChatTableViewController.m
 //  yMessage
@@ -33,19 +34,34 @@
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 44, 0);
     
     manager = [YMessageManager sharedInstance];
-    self.navigationItem.title = [[manager getFriendsDict] objectForKey:[self.conversation getFriendUid]];
-    
+    self.navigationItem.title = [[[DBQ sharedInstance] getFriends] objectForKey:[self.conversation getFriendUid]];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar.layer removeAllAnimations];
+    
+    if ([[self.conversation getConversationArray] count]) {
+        animating = YES;
+        [CATransaction begin];
+        [CATransaction setCompletionBlock: ^{
+            animating = NO;
+        }];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[self.conversation getConversationArray] count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        [CATransaction commit];
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+
+    while ([[self.conversation getConversationArray] count] > 20) {
+        [[self.conversation getConversationArray] removeObjectAtIndex:0];
+        [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {
@@ -122,7 +138,7 @@
     if ([[row getUID] isEqualToNumber:[manager getUID]]) {
         cell.fromLabel.text = @"我";
     } else {
-        cell.fromLabel.text = [[manager getFriendsDict] objectForKey:[row getUID]];
+        cell.fromLabel.text = [[[DBQ sharedInstance] getFriends] objectForKey:[row getUID]];
     }
     cell.contentLabel.text = [row getContent];
     
@@ -214,6 +230,9 @@
     item.message = [AVMessage messageForPeerWithSession:[comm getSession] toPeerId:[[self.conversation getFriendUid] stringValue] payload:self.textField.text];
     item.successBlock = ^(void) {
         [row sent];
+        while (animating) {
+            usleep(10000);
+        }
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:trow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     };
     item.errorBlock = ^(NSString *errorString) {
@@ -228,7 +247,14 @@
     [comm sendMessage:item];
     
     self.textField.text = @"";
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[self.conversation getConversationArray] count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    
+    animating = YES;
+    [CATransaction begin];
+    [CATransaction setCompletionBlock: ^{
+        animating = NO;
+    }];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:trow inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    [CATransaction commit];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sentMessage" object:self userInfo:@{@"conversation": self.conversation}];
     
@@ -246,6 +272,25 @@
     [array addObject:row];
     
     NSIndexPath *path = [NSIndexPath indexPathForRow:[array count] - 1 inSection:0];
+    while (animating) {
+        usleep(10000);
+    }
+    animating = YES;
+    [CATransaction begin];
+    [CATransaction setCompletionBlock: ^{
+        animating = NO;
+    }];
     [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [CATransaction commit];
+    
+    animating = YES;
+    [CATransaction begin];
+    [CATransaction setCompletionBlock: ^{
+        animating = NO;
+    }];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[array count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    [CATransaction commit];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"chatViewRefreshed" object:self userInfo:nil];
 }
 @end

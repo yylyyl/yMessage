@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YMessageManager.h"
 
-@interface ProfileViewController : UIViewController {
+@interface ProfileTableViewController : UITableViewController {
     YMessageManager *manager;
 }
 

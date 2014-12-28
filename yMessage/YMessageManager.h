@@ -12,8 +12,6 @@
 #import "YMsgComm.h"
 
 @interface YMessageManager : NSObject {
-    NSMutableDictionary *friendsDict;
-    NSMutableArray *conversationArray;
     DBQ *mydbq;
     NSUserDefaults *userDefaults;
     YMsgComm *comm;
@@ -22,9 +20,6 @@
 }
 
 + (YMessageManager*)sharedInstance;
-
-- (NSMutableDictionary *)getFriendsDict;
-- (NSMutableArray *)getConversationArray;
 
 - (void)loginUsername:(NSString *)loginusername password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
 - (void)logout;
@@ -38,5 +33,7 @@
 - (void)checkFriendWithNumberString:(NSString *)numStr success:(void (^)(NSString *))successBlock error:(void (^)(NSString *))errorBlock;
 - (void)acceptFriendSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
 - (void)checkAcceptSuccess:(void (^)(BOOL))successBlock error:(void (^)(NSString *))errorBlock;
+
+- (void)deleteFriendWithUid:(NSNumber *)uid success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
 
 @end

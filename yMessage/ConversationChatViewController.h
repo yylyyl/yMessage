@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "YMessageManager.h"
 #import "YConversation.h"
+#import "DBQ.h"
 
 @interface ConversationChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
     
     YMessageManager *manager;
+    BOOL animating;
     
 }
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *keyBoardHeightConstraint;

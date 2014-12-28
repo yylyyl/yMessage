@@ -25,13 +25,21 @@
     
     manager = [YMessageManager sharedInstance];
     
-    friendsDict = [manager getFriendsDict];
+    friendsDict = [[DBQ sharedInstance] getFriends];
     allUIDs = [friendsDict allKeys];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedIn) name:@"loginNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(NCdeleteFriend:) name:@"NCdeleteFriend" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendAdded) name:@"friendAdded" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    showingFriendUID = nil;
 }
 
 #pragma mark - Table view data source
@@ -95,18 +103,43 @@
         FriendDetailTableViewController *vc = segue.destinationViewController;
         vc.uid = [allUIDs objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
         vc.screenName = [friendsDict objectForKey:[allUIDs objectAtIndex:[[self.tableView indexPathForSelectedRow] row]]];
+        
+        showingFriendUID = vc.uid;
     }
 }
 
 - (void)reloadList {
-    friendsDict = [manager getFriendsDict];
+    friendsDict = [[DBQ sharedInstance] getFriends];
     allUIDs = [friendsDict allKeys];
     
     [self.tableView reloadData];
 }
 
+
 - (IBAction)deleteFriend:(UIStoryboardSegue *)segue {
+    [self reloadList];
+}
+
+- (void)loggedIn {
+    [self reloadList];
+}
+
+- (void)NCdeleteFriend:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    NSNumber *uid = [dict objectForKey:@"uid"];
     
+    if (showingFriendUID && [showingFriendUID isEqualToNumber:uid]) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+    
+    [friendsDict removeObjectForKey:uid];
+    allUIDs = [friendsDict allKeys];
+    [self.tableView reloadData];
+    
+}
+
+- (void)friendAdded {
+    [self reloadList];
 }
 
 @end

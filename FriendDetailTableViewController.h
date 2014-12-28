@@ -7,8 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "YMessageManager.h"
+#import "DBQ.h"
 
-@interface FriendDetailTableViewController : UITableViewController
+@interface FriendDetailTableViewController : UITableViewController {
+    YMessageManager *manager;
+    BOOL deleted;
+}
 
 @property (weak, nonatomic) IBOutlet UILabel *screenNameLabel;
 

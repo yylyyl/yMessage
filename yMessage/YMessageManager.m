@@ -40,10 +40,6 @@
         //conversationArray = @[conversation, conversation, conversation, conversation];
         
         mydbq = [DBQ sharedInstance];
-        [mydbq open];
-        friendsDict = [mydbq getFriends];
-        conversationArray = [mydbq getConversations];
-        [mydbq close];
         
         userDefaults = [NSUserDefaults standardUserDefaults];
     }
@@ -52,9 +48,8 @@
 }
 
 - (void)openConnectSuccess:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock loading:(void (^)(void))loadingBlock {
-    NSArray *friendsIdsArray = [friendsDict allKeys];
     NSString *myIdString = [[self getUID] stringValue];
-    comm = [[YMsgComm alloc] initWithMyId:myIdString myFriendsIds:friendsIdsArray success:successBlock error:errorBlock loading:loadingBlock];
+    comm = [[YMsgComm alloc] initWithMyId:myIdString success:successBlock error:errorBlock loading:loadingBlock];
     comm.username = [self getUsername];
     comm.hpassword = [self getHashedPassword];
     [comm open];
@@ -62,14 +57,6 @@
 
 - (YMsgComm *)getComm {
     return comm;
-}
-
-- (NSMutableDictionary *)getFriendsDict {
-    return friendsDict;
-}
-
-- (NSMutableArray *)getConversationArray {
-    return conversationArray;
 }
 
 - (void)loginUsername:(NSString *)loginusername password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock {
@@ -109,13 +96,11 @@
         
         // load friend list
         NSArray *friends = [d objectForKey:@"friends"];
-        [mydbq open];
         for (NSDictionary *f in friends) {
             NSNumber *fuid = [NSNumber numberWithInteger:[[f objectForKey:@"id"] integerValue]];
             NSString *fname = [f objectForKey:@"screen_name"];
             [mydbq addFriendWith:fuid screenName:fname];
         }
-        [mydbq close];
         
         if (successBlock) {
             successBlock();
@@ -137,9 +122,9 @@
     [userDefaults removeObjectForKey:@"uid"];
     [userDefaults removeObjectForKey:@"screen_name"];
     [userDefaults synchronize];
-    [mydbq open];
+
     [mydbq clearAllData];
-    [mydbq close];
+
 }
 
 #pragma mark - adding friends
@@ -239,13 +224,44 @@
             NSString *screenName = [d objectForKey:@"screen_name"];
             NSNumber *uid = [NSNumber numberWithInteger:[[d objectForKey:@"uid"] integerValue]];
             
-            [mydbq open];
             [mydbq addFriendWith:uid screenName:screenName];
-            [mydbq close];
         }
         
         if (successBlock) {
             successBlock(accept);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        if (errorBlock) {
+            errorBlock([error localizedDescription]);
+        }
+    }];
+    
+}
+
+- (void)deleteFriendWithUid:(NSNumber *)uid success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary *args = @{@"username": [self getUsername], @"hpassword": [self getHashedPassword], @"uid": uid};
+    [manager GET:@"http://yyl.im/ym/delete_friend.php" parameters:args success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (responseObject == nil || ![responseObject isKindOfClass: [NSDictionary class]]) {
+            if (errorBlock) {
+                errorBlock(@"Unknown error, invalid data");
+            }
+            return;
+        }
+        NSDictionary *d = responseObject;
+        BOOL isOK = [[d objectForKey:@"ok"] boolValue];
+        if (!isOK) {
+            NSString *errorString = [d objectForKey:@"error"];
+            if (errorBlock) {
+                errorBlock(errorString);
+            }
+            return;
+        }
+        
+        if (successBlock) {
+            successBlock();
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

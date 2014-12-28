@@ -6,13 +6,13 @@
 //  Copyright (c) 2014年 yylyyl. All rights reserved.
 //
 
-#import "ProfileViewController.h"
+#import "ProfileTableViewController.h"
 
-@interface ProfileViewController ()
+@interface ProfileTableViewController ()
 
 @end
 
-@implementation ProfileViewController
+@implementation ProfileTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,6 +26,15 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    
+    if (indexPath.section == 1 && indexPath.row == 0) {
+        [self logoutPressed:self];
+    }
 }
 
 /*
@@ -47,7 +56,7 @@
 }
 
 - (IBAction)logoutPressed:(id)sender {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"真的要注销？" message:@"所有聊天记录将会被删除" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"真的要注销？" message:@"所有聊天记录将会被删除" preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"注销" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"logoutNotification" object:self];
         

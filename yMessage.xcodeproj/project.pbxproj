@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		852CC5E91A494AFD00B6C79E /* FriendDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 852CC5E81A494AFD00B6C79E /* FriendDetailTableViewController.m */; };
-		852CC5EC1A4AB87F00B6C79E /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 852CC5EB1A4AB87F00B6C79E /* ProfileViewController.m */; };
+		852CC5EC1A4AB87F00B6C79E /* ProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 852CC5EB1A4AB87F00B6C79E /* ProfileTableViewController.m */; };
 		85424A211A11063200419FF2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 85424A201A11063200419FF2 /* main.m */; };
 		85424A241A11063200419FF2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85424A231A11063200419FF2 /* AppDelegate.m */; };
 		85424A2D1A11063200419FF2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85424A2B1A11063200419FF2 /* Main.storyboard */; };
@@ -55,8 +55,8 @@
 /* Begin PBXFileReference section */
 		852CC5E71A494AFD00B6C79E /* FriendDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailTableViewController.h; sourceTree = "<group>"; };
 		852CC5E81A494AFD00B6C79E /* FriendDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDetailTableViewController.m; sourceTree = "<group>"; };
-		852CC5EA1A4AB87F00B6C79E /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
-		852CC5EB1A4AB87F00B6C79E /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		852CC5EA1A4AB87F00B6C79E /* ProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableViewController.h; sourceTree = "<group>"; };
+		852CC5EB1A4AB87F00B6C79E /* ProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableViewController.m; sourceTree = "<group>"; };
 		85424A1B1A11063200419FF2 /* yMessage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yMessage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85424A1F1A11063200419FF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		85424A201A11063200419FF2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -183,8 +183,8 @@
 				85727BA61A47365800FA42B4 /* TabBarViewController.m */,
 				85727B9C1A47302300FA42B4 /* LoginTableViewController.h */,
 				85727B9D1A47302300FA42B4 /* LoginTableViewController.m */,
-				852CC5EA1A4AB87F00B6C79E /* ProfileViewController.h */,
-				852CC5EB1A4AB87F00B6C79E /* ProfileViewController.m */,
+				852CC5EA1A4AB87F00B6C79E /* ProfileTableViewController.h */,
+				852CC5EB1A4AB87F00B6C79E /* ProfileTableViewController.m */,
 				85D111041A2CB72600C434A9 /* Friends */,
 				85E5AF2F1A4C85740005EBA6 /* ListTableViewCell.h */,
 				85E5AF301A4C85740005EBA6 /* ListTableViewCell.m */,
@@ -413,7 +413,7 @@
 			files = (
 				852CC5E91A494AFD00B6C79E /* FriendDetailTableViewController.m in Sources */,
 				85424A711A110D5700419FF2 /* AFURLSessionManager.m in Sources */,
-				852CC5EC1A4AB87F00B6C79E /* ProfileViewController.m in Sources */,
+				852CC5EC1A4AB87F00B6C79E /* ProfileTableViewController.m in Sources */,
 				85727B9E1A47302300FA42B4 /* LoginTableViewController.m in Sources */,
 				85424A491A11080B00419FF2 /* ConversationListTableViewController.m in Sources */,
 				85727BA41A47344200FA42B4 /* CocoaSecurity.m in Sources */,

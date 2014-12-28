@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "YMessageManager.h"
+#import "DBQ.h"
 
 @interface ConversationListTableViewController : UITableViewController {
     YMessageManager *manager;
     NSMutableArray *conversationArray;
     
     YConversation *chatConversation;
+    YConversation *showingConversation;
+    DBQ *mydbq;
 }
 
 @end
