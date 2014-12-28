@@ -16,6 +16,8 @@
     YMessageManager *manager;
     BOOL animating;
     
+    BOOL firstload;
+    
 }
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *keyBoardHeightConstraint;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

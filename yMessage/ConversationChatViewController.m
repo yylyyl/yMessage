@@ -36,8 +36,29 @@
     manager = [YMessageManager sharedInstance];
     self.navigationItem.title = [[[DBQ sharedInstance] getFriends] objectForKey:[self.conversation getFriendUid]];
 
+    firstload = YES;
 }
 
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if([indexPath row] == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row && firstload){
+        //end of loading
+        //for example [activityIndicator stopAnimating];
+        if ([[self.conversation getConversationArray] count]) {
+            animating = YES;
+            [CATransaction begin];
+            [CATransaction setCompletionBlock: ^{
+                animating = NO;
+            }];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[self.conversation getConversationArray] count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+            [CATransaction commit];
+        }
+        
+        firstload = NO;
+    }
+}
+
+/*
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -53,6 +74,7 @@
     }
     
 }
+*/
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -134,11 +156,13 @@
     return cell;
 }
 
-- (void)configureCell:(YConversationRow *)row cell:(ConversationTableViewCell *)cell {
+- (void)configureCell:(YConversationRow *)row cell:(ConversationTableViewCell *)cell {    
     if ([[row getUID] isEqualToNumber:[manager getUID]]) {
         cell.fromLabel.text = @"我";
+        cell.backgroundColor = [UIColor colorWithRed:240.0/255 green:1 blue:240.0/255 alpha:1];
     } else {
         cell.fromLabel.text = [[[DBQ sharedInstance] getFriends] objectForKey:[row getUID]];
+        cell.backgroundColor = [UIColor whiteColor];
     }
     cell.contentLabel.text = [row getContent];
     

@@ -21,6 +21,7 @@
 
 + (YMessageManager*)sharedInstance;
 
+- (void)registerUsername:(NSString *)loginusername screenName:(NSString *)screenname password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
 - (void)loginUsername:(NSString *)loginusername password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock;
 - (void)logout;
 - (BOOL)logined;

@@ -50,6 +50,7 @@
 		85727BB01A4854C900FA42B4 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 85727BAF1A4854C900FA42B4 /* STHTTPRequest.m */; };
 		858D055B1A4896640050A6F7 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 858D055A1A4896640050A6F7 /* AddFriendViewController.m */; };
 		85E5AF311A4C85740005EBA6 /* ListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85E5AF301A4C85740005EBA6 /* ListTableViewCell.m */; };
+		85F637B41A4FFD4E00AF99C9 /* RegisterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85F637B31A4FFD4E00AF99C9 /* RegisterTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -135,6 +136,8 @@
 		858D055A1A4896640050A6F7 /* AddFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendViewController.m; path = yMessage/AddFriendViewController.m; sourceTree = "<group>"; };
 		85E5AF2F1A4C85740005EBA6 /* ListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListTableViewCell.h; path = ../ListTableViewCell.h; sourceTree = "<group>"; };
 		85E5AF301A4C85740005EBA6 /* ListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ListTableViewCell.m; path = ../ListTableViewCell.m; sourceTree = "<group>"; };
+		85F637B21A4FFD4E00AF99C9 /* RegisterTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterTableViewController.h; sourceTree = "<group>"; };
+		85F637B31A4FFD4E00AF99C9 /* RegisterTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +186,8 @@
 				85727BA61A47365800FA42B4 /* TabBarViewController.m */,
 				85727B9C1A47302300FA42B4 /* LoginTableViewController.h */,
 				85727B9D1A47302300FA42B4 /* LoginTableViewController.m */,
+				85F637B21A4FFD4E00AF99C9 /* RegisterTableViewController.h */,
+				85F637B31A4FFD4E00AF99C9 /* RegisterTableViewController.m */,
 				852CC5EA1A4AB87F00B6C79E /* ProfileTableViewController.h */,
 				852CC5EB1A4AB87F00B6C79E /* ProfileTableViewController.m */,
 				85D111041A2CB72600C434A9 /* Friends */,
@@ -439,6 +444,7 @@
 				85424A211A11063200419FF2 /* main.m in Sources */,
 				85424A6A1A110D5700419FF2 /* AFHTTPRequestOperationManager.m in Sources */,
 				85424A771A11E14400419FF2 /* ConversationChatViewController.m in Sources */,
+				85F637B41A4FFD4E00AF99C9 /* RegisterTableViewController.m in Sources */,
 				85424A6D1A110D5700419FF2 /* AFSecurityPolicy.m in Sources */,
 				85424A701A110D5700419FF2 /* AFURLResponseSerialization.m in Sources */,
 				85424A741A11112000419FF2 /* YConversation.m in Sources */,
@@ -563,7 +569,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1ee037a4-e053-4cd6-bd57-abd6762fb2f5";
 			};
 			name = Debug;
 		};
@@ -585,7 +591,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1ee037a4-e053-4cd6-bd57-abd6762fb2f5";
 			};
 			name = Release;
 		};

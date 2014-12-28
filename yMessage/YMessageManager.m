@@ -53,10 +53,66 @@
     comm.username = [self getUsername];
     comm.hpassword = [self getHashedPassword];
     [comm open];
+    [comm setMyUId:[self getUID]];
 }
 
 - (YMsgComm *)getComm {
     return comm;
+}
+
+- (void)registerUsername:(NSString *)loginusername screenName:(NSString *)screenname password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock {
+    
+    NSLog(@"%@", @"try to register");
+    NSString *hpassword = [CocoaSecurity md5:password].hexLower;
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary *args = @{@"username": loginusername, @"hpassword": hpassword, @"screen_name": screenname};
+    [manager GET:@"http://yyl.im/ym/register.php" parameters:args success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (responseObject == nil || ![responseObject isKindOfClass: [NSDictionary class]]) {
+            if (errorBlock) {
+                errorBlock(@"Unknown error, invalid data");
+            }
+            return;
+        }
+        NSDictionary *d = responseObject;
+        BOOL isOK = [[d objectForKey:@"ok"] boolValue];
+        if (!isOK) {
+            NSString *errorString = [d objectForKey:@"error"];
+            if (errorBlock) {
+                errorBlock(errorString);
+            }
+            return;
+        }
+        
+        NSLog(@"%@", d);
+        
+        NSNumber *uid = [NSNumber numberWithInteger:[[d objectForKey:@"uid"] integerValue]];
+        NSString *screen_name = [d objectForKey:@"screen_name"];
+        
+        [userDefaults setObject:loginusername forKey:@"username"];
+        [userDefaults setObject:hpassword forKey:@"hpassword"];
+        [userDefaults setInteger:[uid unsignedIntegerValue] forKey:@"uid"];
+        [userDefaults setObject:screen_name forKey:@"screen_name"];
+        [userDefaults synchronize];
+        
+        // load friend list
+        NSArray *friends = [d objectForKey:@"friends"];
+        for (NSDictionary *f in friends) {
+            NSNumber *fuid = [NSNumber numberWithInteger:[[f objectForKey:@"id"] integerValue]];
+            NSString *fname = [f objectForKey:@"screen_name"];
+            [mydbq addFriendWith:fuid screenName:fname];
+        }
+        
+        if (successBlock) {
+            successBlock();
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        if (errorBlock) {
+            errorBlock([error localizedDescription]);
+        }
+    }];
 }
 
 - (void)loginUsername:(NSString *)loginusername password:(NSString *)password success:(void (^)(void))successBlock error:(void (^)(NSString *))errorBlock {

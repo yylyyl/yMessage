@@ -20,7 +20,26 @@
     // Override point for customization after application launch.
     [AVOSCloud setApplicationId:@"chli5qcatwixgl9iire960jvw8na1kgyii4q3a3pailoqh35"
                       clientKey:@"tz5tsuwryej674wkgdbuajdjounoalub4yrgoek1rpojgy9f"];
+    
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
+                                            | UIUserNotificationTypeBadge
+                                            | UIUserNotificationTypeSound
+                                                                             categories:nil];
+    [application registerUserNotificationSettings:settings];
+    [application registerForRemoteNotifications];
+    
+    [[UITabBar appearance] setTintColor: [UIColor colorWithRed:0 green:150.0/255 blue:0 alpha:1]];
     return YES;
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"Failed to register for remote notification: %@", error);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -39,6 +58,11 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

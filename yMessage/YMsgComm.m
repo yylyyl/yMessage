@@ -152,8 +152,8 @@
     [mySession sendMessage:item.message];
     
     NSDate *date = [NSDate date];
-    NSNumber *uid = [NSNumber numberWithInteger:[item.message.toPeerId integerValue]];
-    NSNumber *rowID = [mydbq addConversationRowContent:item.message.payload date:date uid:uid unread:NO error:NO sending:YES];
+    NSNumber *fuid = [NSNumber numberWithInteger:[item.message.toPeerId integerValue]];
+    NSNumber *rowID = [mydbq addConversationRowContent:item.message.payload date:date fUId:fuid senderUId:myUId unread:NO error:NO sending:YES];
     item.rowID = rowID;
 }
 
@@ -215,6 +215,10 @@
 
 - (AVSession *)getSession {
     return mySession;
+}
+
+- (void)setMyUId:(NSNumber *)nuid {
+    myUId = nuid;
 }
 
 @end

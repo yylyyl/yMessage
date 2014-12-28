@@ -23,6 +23,7 @@
     NSString *myid;
     AVSession *mySession;
     DBQ *mydbq;
+    NSNumber *myUId;
     
     void (^successBlock)(void);
     void (^errorBlock)(NSString *);
@@ -38,5 +39,7 @@
 - (void)close;
 - (AVSession *)getSession;
 - (void)sendMessage:(MsgQueueItem *)item;
+
+- (void)setMyUId:(NSNumber *)nuid;
 
 @end

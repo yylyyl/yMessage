@@ -98,8 +98,10 @@
 
     if ([conversation hasUnread]) {
         cell.hasNewLabel.hidden = NO;
+        cell.timeLabel.hidden = YES;
     } else {
         cell.hasNewLabel.hidden = YES;
+        cell.timeLabel.hidden = NO;
     }
     
     return cell;
@@ -224,9 +226,10 @@
         [updatedCon setUnread:YES];
         [conversationArray insertObject:updatedCon atIndex:0];
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mydbq addConversationRowContent:[row getContent] date:[row getDate] uid:[row getUID] unread:YES error:NO sending:NO];
+        [mydbq addConversationRowContent:[row getContent] date:[row getDate] fUId:[row getUID] senderUId:[row getUID] unread:YES error:NO sending:NO];
         
         [[self navigationController] tabBarItem].badgeValue = @"!";
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 1];
 
     } else {
         // existing conversation
@@ -238,11 +241,12 @@
             NSMutableArray *array = [updatedCon getConversationArray];
             [array addObject:row];
             [updatedCon setUnread:YES];
-            [mydbq addConversationRowContent:[row getContent] date:[row getDate] uid:[row getUID] unread:YES error:NO sending:NO];
+            [mydbq addConversationRowContent:[row getContent] date:[row getDate] fUId:[row getUID] senderUId:[row getUID] unread:YES error:NO sending:NO];
             
             [[self navigationController] tabBarItem].badgeValue = @"!";
+            [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 1];
         } else {
-            [mydbq addConversationRowContent:[row getContent] date:[row getDate] uid:[row getUID] unread:NO error:NO sending:NO];
+            [mydbq addConversationRowContent:[row getContent] date:[row getDate] fUId:[row getUID] senderUId:[row getUID] unread:NO error:NO sending:NO];
         }
         
         [self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:[conversationArray indexOfObject:updatedCon] inSection:0] toIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
@@ -290,13 +294,17 @@
     for (YConversation *con in conversationArray) {
         if ([con hasUnread]) {
             unread = YES;
+            
             break;
         }
     }
     if (unread) {
         [[self navigationController] tabBarItem].badgeValue = @"!";
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 1];
     } else {
         [[self navigationController] tabBarItem].badgeValue = nil;
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
     }
 }
 

@@ -23,7 +23,7 @@
 - (void)addFriendWith:(NSNumber *)uid screenName:(NSString *)screenName;
 - (void)deleteFriendWithUid:(NSNumber *)uid;
 
-- (NSNumber *)addConversationRowContent:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid unread:(BOOL)unread error:(BOOL)error sending:(BOOL)sending;
+- (NSNumber *)addConversationRowContent:(NSString *)content date:(NSDate *)date fUId:(NSNumber *)fuid senderUId:(NSNumber *)senderuid unread:(BOOL)unread error:(BOOL)error sending:(BOOL)sending;
 - (void)setConversationReadUid:(NSNumber *)uid;
 
 - (void)setRowId:(NSNumber *)rid Sending:(BOOL)sending error:(BOOL)error;

@@ -1,20 +1,19 @@
 //
-//  LoginTableViewController.m
+//  RegisterTableViewController.m
 //  yMessage
 //
-//  Created by yangyiliang on 14/12/22.
+//  Created by yangyiliang on 14/12/28.
 //  Copyright (c) 2014年 yylyyl. All rights reserved.
 //
 
-#import "LoginTableViewController.h"
+#import "RegisterTableViewController.h"
 #import "MBProgressHUD.h"
-#import "YMessageManager.h"
 
-@interface LoginTableViewController ()
+@interface RegisterTableViewController ()
 
 @end
 
-@implementation LoginTableViewController
+@implementation RegisterTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,6 +23,8 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    manager = [YMessageManager sharedInstance];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -35,7 +36,7 @@
 
 /*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"reuseIdentifier" forIndexPath:indexPath];
     
     // Configure the cell...
     
@@ -87,31 +88,39 @@
 }
 */
 
-- (IBAction)usernameReturn:(id)sender {
-    [self.passwordTextField becomeFirstResponder];
-}
-
-- (IBAction)passwordReturn:(id)sender {
-    [self saveButtonPressed:sender];
-}
-
-- (IBAction)saveButtonPressed:(id)sender {
-    if ([self.usernameTextField.text isEqualToString:@""]) {
+- (IBAction)submitPressed:(id)sender {
+    if ([self.usernameField.text isEqualToString:@""]) {
         return;
     }
-    if ([self.passwordTextField.text isEqualToString:@""]) {
+    if ([self.screenNameField.text isEqualToString:@""]) {
+        return;
+    }
+    if ([self.passwordField.text isEqualToString:@""]) {
+        return;
+    }
+    if ([self.repeatField.text isEqualToString:@""]) {
         return;
     }
     
-    [self.usernameTextField resignFirstResponder];
-    [self.passwordTextField resignFirstResponder];
+    [self.usernameField resignFirstResponder];
+    [self.screenNameField resignFirstResponder];
+    [self.passwordField resignFirstResponder];
+    [self.repeatField resignFirstResponder];
+    
+    if ([self.passwordField.text isEqualToString:self.repeatField.text]) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"密码不一致" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:okAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        
+        return;
+    }
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     [self.view setUserInteractionEnabled:NO];
     
-    YMessageManager *manager = [YMessageManager sharedInstance];
-    [manager loginUsername:self.usernameTextField.text password:self.passwordTextField.text success:^(void) {
+    [manager registerUsername:self.usernameField.text screenName:self.screenNameField.text password:self.passwordField.text success:^(void) {
         [self.navigationController.navigationBar setUserInteractionEnabled:YES];
         [self.view setUserInteractionEnabled:YES];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -122,10 +131,26 @@
         [self.navigationController.navigationBar setUserInteractionEnabled:YES];
         [self.view setUserInteractionEnabled:YES];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"登录失败" message:errorString preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:okAction];
         [self presentViewController:alert animated:YES completion:nil];
     }];
+}
+
+- (IBAction)usernameReturn:(id)sender {
+    [self.screenNameField becomeFirstResponder];
+}
+
+- (IBAction)screenNameReturn:(id)sender {
+    [self.passwordField becomeFirstResponder];
+}
+
+- (IBAction)passwordReturn:(id)sender {
+    [self.repeatField becomeFirstResponder];
+}
+
+- (IBAction)repeatReturn:(id)sender {
+    [self submitPressed:self];
 }
 @end

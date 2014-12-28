@@ -132,14 +132,14 @@
     [self close];
 }
 
-- (NSNumber *)addConversationRowContent:(NSString *)content date:(NSDate *)date uid:(NSNumber *)uid unread:(BOOL)unread error:(BOOL)error sending:(BOOL)sending {
+- (NSNumber *)addConversationRowContent:(NSString *)content date:(NSDate *)date fUId:(NSNumber *)fuid senderUId:(NSNumber *)senderuid unread:(BOOL)unread error:(BOOL)error sending:(BOOL)sending; {
     [self open];
     NSString *checkConSQL = @"SELECT * FROM conversations WHERE uid=?";
-    FMResultSet *s = [mydb executeQuery:checkConSQL, uid];
+    FMResultSet *s = [mydb executeQuery:checkConSQL, fuid];
     NSNumber *cid;
     if (![s next]) {
         NSString *addConSQL = @"INSERT INTO conversations(uid, unread) VALUES(?, ?)";
-        [mydb executeUpdate:addConSQL, uid, [NSNumber numberWithBool:unread]];
+        [mydb executeUpdate:addConSQL, fuid, [NSNumber numberWithBool:unread]];
         cid = [NSNumber numberWithInt:(int)[mydb lastInsertRowId]];
     } else {
         cid = [NSNumber numberWithInt:[s intForColumn:@"id"]];
@@ -151,7 +151,7 @@
     }
     
     [mydb executeUpdate:@"INSERT INTO conversation_rows (conid, content, timestamp, uid, sending, errored) VALUES(?, ?, ?, ?, ?, ?)",
-     cid, content, [NSNumber numberWithUnsignedInteger:[date timeIntervalSince1970]], uid,
+     cid, content, [NSNumber numberWithUnsignedInteger:[date timeIntervalSince1970]], senderuid,
      [NSNumber numberWithBool:sending], [NSNumber numberWithBool:error]];
     
     NSNumber *rowID = [NSNumber numberWithInteger: (int)[mydb lastInsertRowId]];
