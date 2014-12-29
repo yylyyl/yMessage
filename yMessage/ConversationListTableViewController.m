@@ -249,9 +249,12 @@
             [mydbq addConversationRowContent:[row getContent] date:[row getDate] fUId:[row getUID] senderUId:[row getUID] unread:NO error:NO sending:NO];
         }
         
+        [conversationArray sortUsingComparator:^NSComparisonResult(YConversation *obj1, YConversation *obj2) {
+            return [[[obj1 getLatestRow] getDate] timeIntervalSince1970] < [[[obj2 getLatestRow] getDate] timeIntervalSince1970];
+        }];
         [self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:[conversationArray indexOfObject:updatedCon] inSection:0] toIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadData];
     }
     
     if([[UIDevice currentDevice].model isEqualToString:@"iPhone"])
