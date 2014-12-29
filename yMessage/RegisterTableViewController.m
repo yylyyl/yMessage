@@ -107,7 +107,7 @@
     [self.passwordField resignFirstResponder];
     [self.repeatField resignFirstResponder];
     
-    if ([self.passwordField.text isEqualToString:self.repeatField.text]) {
+    if (![self.passwordField.text isEqualToString:self.repeatField.text]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"密码不一致" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:okAction];
