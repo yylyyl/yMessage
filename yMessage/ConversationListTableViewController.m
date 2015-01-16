@@ -43,7 +43,7 @@
     [self checkBadge];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     showingConversation = nil;
 }
 
